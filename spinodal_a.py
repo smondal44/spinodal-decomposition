@@ -1,5 +1,5 @@
-# Spinodal decomposition with T shape domain( prob. c of spinodal decomposition problem of pfhub)  
-# To make the T shape domain mshr is essential
+# Spinodal decomposition with square shape domain( prob. a of spinodal decomposition problem of pfhub)  
+# Here, periodic boundary condition has been applied.
 from __future__ import print_function
 from dolfin import *
 from fenics import *
