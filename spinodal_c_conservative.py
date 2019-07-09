@@ -11,19 +11,16 @@ import random
 import csv
 import os
 
-
-#L,H = 200.,200. 
-N = 350 #mesh density
-k,M,rhos,calpha,cbeta,theta = 2,5,5,0.3,0.7,0.5 # model constants of the problem
+N = 350    #mesh density
+#model constants of the problem
+k,M,rhos,calpha,cbeta,theta = 2,5,5,0.3,0.7,0.5 
 c0 = 0.5
 epsilon = 0.01
-dt = 0.5 # initial dt
+dt = 0.5 #initial dt
 Tshape = Rectangle(Point(-40.,0.),Point(60.,120.)) - Rectangle(Point(-40.,0.),Point(0.,100.)) -Rectangle(Point(20.,0.),Point(60.,100.))  # T shape domain
 mesh = generate_mesh(Tshape,N) # mesh generation on the T shape domain
-plot(mesh)  # plotiing the mesh to ensure domain is correctly defind
-plt.show()
-
-class CahnHilliard(NonlinearProblem):   # to assemble the jacobian and non-linear form the problem
+# To assemble the jacobian and non-linear form the problem
+class CahnHilliard(NonlinearProblem):  
     def __init__(self,a,L):
         NonlinearProblem.__init__(self)
         self.L = L
@@ -32,13 +29,14 @@ class CahnHilliard(NonlinearProblem):   # to assemble the jacobian and non-linea
         assemble(self.L,tensor=b)
     def J(self,A,x):
         assemble(self.a,tensor=A)
-
-#initial codition for the domain is expressed using C++ expression, all the constants other than x[0],x[1] have to mentioned after mentioning the degree of the expression
+#initial codition for the domain is expressed using C++ expression, all the constants other than x[0],x[1] have to mentioned 
+#just after mentioning the degree of the expression
 eta0 = Expression(("c0 + epsilon*(cos(0.105*x[0])*cos(0.11*x[1])+pow(cos(0.13*x[0])*cos(0.087*x[1]),2) + cos(0.025*x[0]-0.15*x[1])*cos(0.07*x[0]-0.02*x[1]))","0"),degree = 0,c0 = c0,epsilon = epsilon)
-d =1 # degree of the functionspace of the unknown varible
-Vne = FiniteElement('CG',mesh.ufl_cell(),d) #scalar finite elment for eta 
-Vme = FiniteElement('CG',mesh.ufl_cell(),d) #scalar finite elment for mu
-V = FunctionSpace(mesh,MixedElement([Vne,Vme])) # mixing the two finite elment to make the functionspace, here sequence is important
+d =1   # degree of the functionspace of the varible to be solved
+Vne = FiniteElement('CG',mesh.ufl_cell(),d)  #scalar finite elment for eta 
+Vme = FiniteElement('CG',mesh.ufl_cell(),d)  #scalar finite elment for mu
+# mixing the two finite elment to make the functionspace, here sequence of mixing is important
+V = FunctionSpace(mesh,MixedElement([Vne,Vme]))
 V1,V2 = TestFunction(V) #V1,V2 are the test function for eta and mu resspectively
 VTrial= TrialFunction(V)
 (dc,dmu) = split(VTrial) # splitting the trial functionn for c and mu
@@ -65,15 +63,12 @@ solver.parameters["relative_tolerance"]= 1e-8
 file1 = File ("spinodal_sol_c_conservative/solution_.pvd","compressed") # name of the filw where the solution of each time will be stored
 t = 0.0 # initial time
 file1 << (VNew.split()[0], t)   # storing the initial value in the file
-
-#os.remove("Time_Total_Energy_Spinodal_a.csv")
 Total_Energy = []
 #Time stepping loop
 while True:
     TE = assemble(f*dx)+assemble(k/2*dot(grad(c),grad(c))*dx) # to calculate the total energy of the system
     Total_Energy =[t,TE]
     t += dt
-    print(TE)
     VOld.vector()[:] = VNew.vector()
     mu_mid = (1.0-theta)*mu_0 + theta*mu                      # crank-nicholson scheme
     cahn1 = (c - c_0)/dt*V1*dx + M*dot(grad(mu_mid),grad(V1))*dx #cahn-hilliard equation is splitted into two couple pde
@@ -96,7 +91,7 @@ while True:
     if (q < 1e-10):    # if the condition is true the programme will be the out of the time stepping loop
         break
 
-print("Loop Terminated as the difference in chemical potential reached to the desired small value")
+print("Loop Terminated as the difference of chemical potential reached to the desired small value")
     
 
 
