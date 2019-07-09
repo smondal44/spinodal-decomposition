@@ -52,7 +52,7 @@ d =1   # degree of the functionspace of the varible to be solved
 Vne = FiniteElement('CG',mesh.ufl_cell(),d)  #scalar finite elment for eta 
 Vme = FiniteElement('CG',mesh.ufl_cell(),d)  #scalar finite elment for mu
 # mixing the two finite elment to make the functionspace, here sequence of mixing is important
-V = FunctionSpace(mesh,MixedElement([Vne,Vme]))
+V = FunctionSpace(mesh,MixedElement([Vne,Vme]),constrained_domain=PeriodicBoundary())
 V1,V2 = TestFunction(V) #V1,V2 are the test function for eta and mu resspectively
 VTrial= TrialFunction(V)
 (dc,dmu) = split(VTrial) # splitting the trial functionn for c and mu
