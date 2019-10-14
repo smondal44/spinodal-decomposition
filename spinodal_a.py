@@ -1,5 +1,13 @@
-# Spinodal decomposition with square shape domain( prob. a of spinodal decomposition problem of pfhub)  
-# Here, periodic boundary condition has been applied.
+"""
+Phase field community hub developed by Center for Hierarchial Materials Design (CHiMaD) and the National Institute of 
+Standards and Technology (NIST) has published several problems along with standard solutions in order new implementations
+of phase field models can be benchmarked. In this work, we present the FEM based FEniCS implementation to solve the 
+spinodal decomposition problem of square shaped domain with periodic boundary condition. This work has been completed during 
+summer'2019 at MATERIALS AND PROCESS MODELLING LAB of IIT Bombay.
+Author: Shubhajit Mondala(a), Sushil Kumar(b), M.P. Gururajan(b)
+(a) Department of Minerals, Metallurgical and Materials Engineering, Indian Institute of Technology Bhubaneswar, Khurda 752050,India
+(b) Department of Metallurgical Engineering and Materials Science,Indian Institute of Technology Bombay, Powai, Mumbai 400076,India
+"""
 from __future__ import print_function
 from dolfin import *
 from fenics import *
