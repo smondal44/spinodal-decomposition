@@ -84,7 +84,7 @@ solver.parameters["convergence_criterion"]="incremental"
 solver.parameters["relative_tolerance"]= 1e-8
 #solver.parameters["krylov_solver"]["absolute_tolerance"]=1e-12
 #solver.parameters["krylov_solver"]["relative_tolerance"]=1e-8
-file1 = File ("spinodal_sol_c_conservative/solution_.pvd","compressed") # name of the filw where the solution of each time will be stored
+file1 = File ("spinodal_sol_a_conservative/solution_.pvd","compressed") # name of the filw where the solution of each time will be stored
 t = 0.0 # initial time
 file1 << (VNew.split()[0], t)   # storing the initial value in the file
 Total_Energy = []
